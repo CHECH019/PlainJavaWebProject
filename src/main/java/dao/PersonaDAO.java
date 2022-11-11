@@ -28,7 +28,7 @@ public class PersonaDAO extends FactoryDAO<PersonaDTO, Long>{
             Statement s = con.createStatement();
             ResultSet rs = s.executeQuery("SELECT * FROM CLIENTE");
             while(rs.next()){
-                
+
                 Long id = rs.getLong("id");
                 String nombre = rs.getString("nombre");
                 Long dni = rs.getLong("dni");
