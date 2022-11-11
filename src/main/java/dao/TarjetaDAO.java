@@ -20,8 +20,17 @@ public class TarjetaDAO extends FactoryDAO<TarjetaDTO,Long> {
 
     @Override
     public TarjetaDTO save(TarjetaDTO entity) {
-        // TODO Auto-generated method stub
-        return null;
+        Statement s;
+        try {
+            s = con.createStatement();
+            s.executeQuery(
+            "INSERT INTO CUENTA_AHORROS (numero_tarjeta,vencimiento,cvv,cliente_id"
+            + ") VALUES ("+entity.getNumeroTarjeta()+","+entity.getVencimiento()+","+entity.getCvv()+","
+             + ""+entity.getClienteId());
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return entity;
     }
 
     @Override
@@ -30,6 +39,7 @@ public class TarjetaDAO extends FactoryDAO<TarjetaDTO,Long> {
         try {
             Statement s = con.createStatement();
             ResultSet rs = s.executeQuery("SELECT * FROM TARJETA_DEBITO");
+            
             while(rs.next()){
                 Long id = rs.getLong("id");
                 Long clienteId = rs.getLong("cliente_id");

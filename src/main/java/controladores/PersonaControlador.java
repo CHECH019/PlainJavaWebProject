@@ -1,15 +1,14 @@
 package controladores;
 
 import java.io.IOException;
-import java.util.List;
 
+import Iterator.PersonaCollection;
 import dao.PersonaDAO;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import model.PersonaDTO;
 
 @WebServlet(name="PersonaServlet", urlPatterns = "/personas")
 public class PersonaControlador extends HttpServlet{
@@ -22,8 +21,8 @@ public class PersonaControlador extends HttpServlet{
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         PersonaDAO personaDAO = new PersonaDAO(DBConnection.getConnection());
-        List<PersonaDTO> personas = personaDAO.findAll();
-        req.setAttribute("personas", personas);
+        PersonaCollection listaPersonas = new PersonaCollection(personaDAO.findAll());
+        req.setAttribute("personas", listaPersonas.iterator());
         getServletContext().getRequestDispatcher("/JSP/personas.jsp").forward(req, resp);
         /**
          * /personas?firstName=Sergio&lastName=Suarique

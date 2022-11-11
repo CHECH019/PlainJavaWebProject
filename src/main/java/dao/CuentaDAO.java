@@ -18,7 +18,17 @@ public class CuentaDAO extends FactoryDAO<CuentaDTO,Long>{
 
     @Override
     public CuentaDTO save(CuentaDTO entity) {
-        return null;
+        Statement s;
+        try {
+            s = con.createStatement();
+            s.executeQuery(
+            "INSERT INTO CUENTA_AHORROS (clave,saldo,cliente_id) VALUES ("+entity.getClave()+","
+            +entity.getSaldo()+","+entity.getClienteId());
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        
+        return entity;
     }
 
     @Override

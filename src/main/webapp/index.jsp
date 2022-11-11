@@ -7,6 +7,10 @@
     <title>First Java Web App</title>
 </head>
 <body>
-    <h1>HELLO WORLD!!!!!</h1>
+    <h1>JAVA WEB APP</h1>
+    <a href="/banco/personas">Personas</a>
+    <a href="/banco/cuentas">Cuentas</a>
+    <a href="/banco/prestamos">Prestamos</a>
+    <a href="/banco/tarjetas">Tarjetas</a>
 </body>
 </html>

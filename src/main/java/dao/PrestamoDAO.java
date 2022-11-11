@@ -16,11 +16,20 @@ public class PrestamoDAO extends FactoryDAO<PrestamoDTO,Long>{
         super(con);
     }
 
-    @Override
+   @Override
     public PrestamoDTO save(PrestamoDTO entity) {
-        return null;
+        Statement s;
+        try {
+            s = con.createStatement();
+            s.executeQuery(
+            "INSERT INTO CUENTA_AHORROS (cuotas,intereses,valor,cliente_id,descripcion"
+            + ") VALUES ("+entity.getCuotas()+","+entity.getIntereses()+","+entity.getValor()+","
+             + ""+entity.getClienteId()+","+entity.getDescripcion());
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return entity;
     }
-
     @Override
     public List<PrestamoDTO> findAll() {
         List<PrestamoDTO> prestamos = new ArrayList<>();

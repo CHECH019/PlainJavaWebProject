@@ -18,7 +18,17 @@ public class PersonaDAO extends FactoryDAO<PersonaDTO, Long>{
 
     @Override
     public PersonaDTO save(PersonaDTO entity) {
-        return null;
+        Statement s;
+        try {
+            s = con.createStatement();
+            s.executeQuery(
+            "INSERT INTO CUENTA_AHORROS (nombre,dni,correo,cel) VALUES ("+entity.getNombre()+","
+            +entity.getDni()+","+entity.getCorreo()+","+entity.getCel()+")");
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        
+        return entity;
     }
 
     @Override
@@ -27,6 +37,7 @@ public class PersonaDAO extends FactoryDAO<PersonaDTO, Long>{
         try {
             Statement s = con.createStatement();
             ResultSet rs = s.executeQuery("SELECT * FROM CLIENTE");
+            
             while(rs.next()){
 
                 Long id = rs.getLong("id");
