@@ -2,17 +2,19 @@ package controladores;
 
 import java.io.IOException;
 
-import Iterator.PersonaCollection;
-import dao.PersonaDAO;
+import dao.ClienteDAO;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import services.ClienteService;
 
-@WebServlet(name="PersonaServlet", urlPatterns = "/personas")
-public class PersonaControlador extends HttpServlet{
+@WebServlet(name="PersonaServlet", urlPatterns = "/clientes")
+public class ClienteControlador extends HttpServlet{
     
+    ClienteService service = new ClienteService(new ClienteDAO(DBConnection.getConnection()));
+
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         
@@ -20,10 +22,8 @@ public class PersonaControlador extends HttpServlet{
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        PersonaDAO personaDAO = new PersonaDAO(DBConnection.getConnection());
-        PersonaCollection listaPersonas = new PersonaCollection(personaDAO.findAll());
-        req.setAttribute("personas", listaPersonas.iterator());
-        getServletContext().getRequestDispatcher("/JSP/personas.jsp").forward(req, resp);
+        req.setAttribute("clientes", service.getAll());
+        getServletContext().getRequestDispatcher("/JSP/clientes.jsp").forward(req, resp);
         /**
          * /personas?firstName=Sergio&lastName=Suarique
          * req.getParameter("firstName"); 

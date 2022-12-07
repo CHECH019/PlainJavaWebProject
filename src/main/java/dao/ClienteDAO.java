@@ -7,23 +7,23 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-import DTOBuilder.Director;
-import model.PersonaDTO;
+import model.ClienteDTO;
 
-public class PersonaDAO extends FactoryDAO<PersonaDTO, Long>{
+public class ClienteDAO extends GenericDAO<ClienteDTO, Long>{
 
-    public PersonaDAO(Connection con) {
+    public ClienteDAO(Connection con) {
         super(con);
     }
 
     @Override
-    public PersonaDTO save(PersonaDTO entity) {
+    public ClienteDTO save(ClienteDTO entity) {
         Statement s;
         try {
             s = con.createStatement();
             s.executeQuery(
-            "INSERT INTO CUENTA_AHORROS (nombre,dni,correo,cel) VALUES ("+entity.getNombre()+","
-            +entity.getDni()+","+entity.getCorreo()+","+entity.getCel()+")");
+            "INSERT INTO cliente (id,nombre,apellido,genero,correo,direccion) VALUES ("+entity.getNombre()+","
+            +entity.getId()+","+entity.getNombre()+","+entity.getApellido()+","
+            +entity.getGenero()+","+entity.getCorreo()+","+entity.getDireccion()+")");
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
@@ -32,20 +32,21 @@ public class PersonaDAO extends FactoryDAO<PersonaDTO, Long>{
     }
 
     @Override
-    public List<PersonaDTO> findAll() {
-        List<PersonaDTO> personas = new ArrayList<>();
+    public List<ClienteDTO> findAll() {
+        List<ClienteDTO> personas = new ArrayList<>();
         try {
             Statement s = con.createStatement();
-            ResultSet rs = s.executeQuery("SELECT * FROM CLIENTE");
+            ResultSet rs = s.executeQuery("SELECT * FROM CLIENTE LIMIT 200");
             
             while(rs.next()){
 
                 Long id = rs.getLong("id");
                 String nombre = rs.getString("nombre");
-                Long dni = rs.getLong("dni");
+                String apellido = rs.getString("apellido");
                 String correo = rs.getString("correo");
-                String cel = rs.getString("cel");
-                personas.add(Director.makePersona(id, nombre, dni, correo, cel));
+                String genero = rs.getString("genero");
+                String direccion = rs.getString("direccion");
+                personas.add(new ClienteDTO(id, nombre, apellido, genero, correo, direccion));
             }
             
         } catch (SQLException e) {
@@ -55,13 +56,13 @@ public class PersonaDAO extends FactoryDAO<PersonaDTO, Long>{
     }
 
     @Override
-    public PersonaDTO findByID(Long id) {
+    public ClienteDTO findByID(Long id) {
         // TODO Auto-generated method stub
         return null;
     }
 
     @Override
-    public PersonaDTO deleteByID(Long id) {
+    public ClienteDTO deleteByID(Long id) {
         // TODO Auto-generated method stub
         return null;
     }
