@@ -11,6 +11,11 @@ public class ProductoDTO {
 
     private List<ClienteDTO> clientes;
 
+    public ProductoDTO(int id, String nombre) {
+        this.id = id;
+        this.nombre = nombre;
+    }
+
     public int getId() {
         return id;
     }

@@ -7,28 +7,23 @@ import dao.GenericDAO;
 
 public abstract class BaseService<T,ID> {
     
-    protected GenericDAO<T,ID> dao;
-
-    
-    
-    public BaseService(GenericDAO<T, ID> dao) {
-        this.dao = dao;
-    }
 
     public List<T> getAll(){
-        return dao.findAll();
+        return getDao().findAll();
     }
 
     public T getById(ID id){
-        return dao.findByID(id);
+        return getDao().findByID(id);
     }
 
     public T save(T entity){
-        return dao.save(entity);
+        return getDao().save(entity);
     }
 
     public T deleteById(ID id){
-        return dao.deleteByID(id);
+        return getDao().deleteByID(id);
     }
+
+    public abstract GenericDAO<T,ID> getDao();
 
 }

@@ -11,6 +11,8 @@ import model.ClienteDTO;
 
 public class ClienteDAO extends GenericDAO<ClienteDTO, Long>{
 
+    private String query;
+
     public ClienteDAO(Connection con) {
         super(con);
     }
@@ -20,10 +22,10 @@ public class ClienteDAO extends GenericDAO<ClienteDTO, Long>{
         Statement s;
         try {
             s = con.createStatement();
-            s.executeQuery(
-            "INSERT INTO cliente (id,nombre,apellido,genero,correo,direccion) VALUES ("+entity.getNombre()+","
-            +entity.getId()+","+entity.getNombre()+","+entity.getApellido()+","
-            +entity.getGenero()+","+entity.getCorreo()+","+entity.getDireccion()+")");
+            query = "INSERT INTO cliente (nombre,apellido,genero,correo,direccion) VALUES ('"
+            +entity.getNombre()+"','"+entity.getApellido()+"','"+entity.getGenero()+"','"+entity.getCorreo()+"','"+entity.getDireccion()+"')";
+            System.out.println(query);
+            s.executeUpdate(query);
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
@@ -33,32 +35,12 @@ public class ClienteDAO extends GenericDAO<ClienteDTO, Long>{
 
     @Override
     public List<ClienteDTO> findAll() {
-        List<ClienteDTO> personas = new ArrayList<>();
-        try {
-            Statement s = con.createStatement();
-            ResultSet rs = s.executeQuery("SELECT * FROM CLIENTE LIMIT 200");
-            
-            while(rs.next()){
-
-                Long id = rs.getLong("id");
-                String nombre = rs.getString("nombre");
-                String apellido = rs.getString("apellido");
-                String correo = rs.getString("correo");
-                String genero = rs.getString("genero");
-                String direccion = rs.getString("direccion");
-                personas.add(new ClienteDTO(id, nombre, apellido, genero, correo, direccion));
-            }
-            
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return personas;
+        return getClientsListFromQuery("SELECT * FROM CLIENTE LIMIT 200");
     }
 
     @Override
     public ClienteDTO findByID(Long id) {
-        // TODO Auto-generated method stub
-        return null;
+        return getClientsListFromQuery("SELECT * FROM CLIENTE WHERE id = "+id).get(0);
     }
 
     @Override
@@ -67,4 +49,27 @@ public class ClienteDAO extends GenericDAO<ClienteDTO, Long>{
         return null;
     }
     
+    public List<ClienteDTO> findByNameAndLastName(String name, String lastName){
+        return getClientsListFromQuery("SELECT * FROM CLIENTE WHERE nombre = '"+name
+        +"' AND apellido = '"+lastName+"'");
+    }
+    private List<ClienteDTO> getClientsListFromQuery(String query){
+        List<ClienteDTO> clientes = new ArrayList<>();
+        try {
+            Statement s = con.createStatement();
+            ResultSet rs = s.executeQuery(query);
+            while(rs.next()){
+                Long id = rs.getLong("id");
+                String nombre = rs.getString("nombre");
+                String apellido = rs.getString("apellido");
+                String correo = rs.getString("correo");
+                String genero = rs.getString("genero");
+                String direccion = rs.getString("direccion");
+                clientes.add(new ClienteDTO(id, nombre, apellido, genero, correo, direccion));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return clientes;
+    }
 }
