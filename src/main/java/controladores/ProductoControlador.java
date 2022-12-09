@@ -61,10 +61,7 @@ public class ProductoControlador extends HttpServlet {
         Long client_id = Long.parseLong(req.getParameter("client_id"));
         Integer product_id = Integer.parseInt(req.getParameter("product_id"));
         productoService.saveClienteProducto(client_id, product_id);
-        req.setAttribute("cliente", clienteService.getById(client_id));
-        req.setAttribute("productos", productoService.getByClientId(client_id));
         resp.sendRedirect("/banco/productos/buscar?id="+client_id);
-        // getServletContext().getRequestDispatcher("/JSP/productos.jsp").forward(req, resp);
     }
     public void nuevoProducto(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Long id = Long.parseLong(req.getParameter("id"));
