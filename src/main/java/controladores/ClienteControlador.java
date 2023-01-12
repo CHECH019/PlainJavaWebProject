@@ -16,7 +16,7 @@ import services.ClienteService;
 @WebServlet(name="ClienteServlet", urlPatterns = "/clientes/*")
 public class ClienteControlador extends HttpServlet{
     
-    ClienteService service = new ClienteService(new ClienteDAO(DBConnection.getConnection()));
+    ClienteService service = new ClienteService(new ClienteDAO());
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

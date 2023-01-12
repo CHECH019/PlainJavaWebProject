@@ -2,14 +2,39 @@ package model;
 
 import java.util.List;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name = "producto")
 public class ProductoDTO {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
+    @Column(nullable = false)
     private String nombre;
 
+    @ManyToOne
+    @JoinColumn(name="tipo_producto_id", nullable = false)
     private TipoProductoDTO tipo;
 
+    @ManyToMany(mappedBy = "productos", fetch = FetchType.LAZY)
     private List<ClienteDTO> clientes;
+
+    
+
+    public ProductoDTO() {
+    }
 
     public ProductoDTO(int id, String nombre) {
         this.id = id;
@@ -40,13 +65,4 @@ public class ProductoDTO {
         this.tipo = tipo;
     }
 
-    public List<ClienteDTO> getClientes() {
-        return clientes;
-    }
-
-    public void setClientes(List<ClienteDTO> clientes) {
-        this.clientes = clientes;
-    }
-
-    
 }

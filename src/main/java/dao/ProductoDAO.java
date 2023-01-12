@@ -1,19 +1,11 @@
 package dao;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.List;
 
 import model.ProductoDTO;
 
 public class ProductoDAO extends GenericDAO<ProductoDTO,Integer>{
 
-    public ProductoDAO(Connection con) {
-        super(con);
-    }
 
     @Override
     public ProductoDTO save(ProductoDTO entity) {
@@ -38,36 +30,31 @@ public class ProductoDAO extends GenericDAO<ProductoDTO,Integer>{
     }
 
     public void saveClientProduct(Long client_id, Integer product_id){
-        Statement s;
-        try {
-            s = con.createStatement();
-            String query = "INSERT INTO cliente_producto VALUES("
-            +client_id+","+product_id+")";
-            System.out.println(query);
-            s.executeUpdate(query);
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-        }
+        manager = emf.createEntityManager();
+        manager.getTransaction().begin();
+        String query = "INSERT INTO cliente_producto VALUES(:client_id, :product_id)";
+        manager.createNativeQuery(query)
+        .setParameter("client_id", client_id)
+        .setParameter( "product_id", client_id)
+        .executeUpdate();
+        manager.getTransaction().commit();
+        manager.close();
+        emf.close();
+
+        
     }
 
     public List<ProductoDTO> findProductsByClientId(Long id){
         return getProductListFromQuery("SELECT p.id, p.nombre FROM producto p JOIN cliente_producto cp ON p.id = cp.producto_id JOIN cliente c ON cp.cliente_id = c.id WHERE c.id = "+id);
     }
-
+    @SuppressWarnings("unchecked")
     private List<ProductoDTO> getProductListFromQuery(String query){
-        List<ProductoDTO> productos = new ArrayList<>();
-        try {
-            Statement s = con.createStatement();
-            ResultSet rs = s.executeQuery(query);
-            while(rs.next()){
-                int id = rs.getInt("id");
-                String nombre = rs.getString("nombre");
-                
-                productos.add(new ProductoDTO(id, nombre));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        List<ProductoDTO> productos;
+        manager = emf.createEntityManager();
+        manager.getTransaction().begin();
+        productos = manager.createNativeQuery(query).getResultList();
+        manager.getTransaction().commit();
+        manager.close();
         return productos;
     }
 }

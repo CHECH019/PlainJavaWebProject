@@ -17,8 +17,8 @@ import services.ProductoService;
 
 @WebServlet(name="ProductoServlet", urlPatterns = "/productos/*")
 public class ProductoControlador extends HttpServlet {
-    private ProductoService productoService = new ProductoService(new ProductoDAO(DBConnection.getConnection()));
-    private ClienteService clienteService = new ClienteService(new ClienteDAO(DBConnection.getConnection()));
+    private ProductoService productoService = new ProductoService(new ProductoDAO());
+    private ClienteService clienteService = new ClienteService(new ClienteDAO());
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

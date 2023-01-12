@@ -1,36 +1,20 @@
 package controladores;
 
-import java.sql.Connection;
-import java.sql.SQLException;
 
-import com.mysql.cj.jdbc.MysqlDataSource;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.Persistence;
 
 public class DBConnection {
-    private static Connection myDBConnection;
+    private static final String PERSISTENCE_UNIT_NAME = "my_persistence_unit";
+    private static EntityManagerFactory emf;
     
     private DBConnection(){}
 
-    public static Connection getConnection(){
-        if(myDBConnection == null){
-            try {
-                
-                MysqlDataSource ds = new MysqlDataSource();
-                ds.setServerName("localhost");
-                ds.setPortNumber(3306);
-                ds.setDatabaseName("banco");
-                ds.setUser("root");
-                ds.setPassword("root");
-                ds.setUseSSL(false);
-                ds.setAllowPublicKeyRetrieval(true);
-                ds.setAutoReconnect(true);
-                myDBConnection = ds.getConnection();
-                System.out.println("Conexión exitosa");
-            } catch (SQLException e) {
-                System.out.println("Conexión fallida");
-                e.printStackTrace();
-            }
-
+    public static EntityManagerFactory getEntityManagerFactory(){
+        if(emf == null){
+            emf = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT_NAME);
+            System.out.println("Conexión exitosa");
         }
-        return myDBConnection;
+        return emf;
     }
 }

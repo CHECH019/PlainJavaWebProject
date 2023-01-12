@@ -2,25 +2,46 @@ package model;
 
 import java.util.List;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.Table;
+import jakarta.persistence.JoinColumn; 
+
+@Entity
+@Table(name = "cliente")
 public class ClienteDTO {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    @Column(nullable = false)
     private String nombre;
 
+    @Column(nullable = false)
     private String apellido;
 
+    @Column(nullable = false)
     private String genero;
 
+    @Column(nullable = false)
     private String correo;
 
+    @Column(nullable = false)
     private String direccion;
 
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "cliente_producto", joinColumns = @JoinColumn(name = "cliente_id"), inverseJoinColumns = @JoinColumn(name = "producto_id"))
     private List<ProductoDTO> productos;
 
-    public ClienteDTO() {
-    }
-    
+    public ClienteDTO(){}
+
     public ClienteDTO(String nombre, String apellido, String genero, String correo, String direccion) {
         this.nombre = nombre;
         this.apellido = apellido;
@@ -85,15 +106,5 @@ public class ClienteDTO {
     public void setDireccion(String direccion) {
         this.direccion = direccion;
     }
-
-    public List<ProductoDTO> getProductos() {
-        return productos;
-    }
-
-    public void setProductos(List<ProductoDTO> productos) {
-        this.productos = productos;
-    }
-
-
 
 }

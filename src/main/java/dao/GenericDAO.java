@@ -1,13 +1,17 @@
 package dao;
 
-import java.sql.Connection;
 import java.util.List;
 
-public abstract class GenericDAO<T,ID> {
-    protected Connection con;
+import controladores.DBConnection;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
 
-    public GenericDAO(Connection con){
-        this.con = con;
+public abstract class GenericDAO<T,ID> {
+    protected EntityManagerFactory emf;
+    EntityManager manager;
+
+    public GenericDAO(){
+        this.emf = DBConnection.getEntityManagerFactory();
     }
     
     public abstract T save(T entity );
