@@ -17,8 +17,14 @@ import services.ProductoService;
 
 @WebServlet(name="ProductoServlet", urlPatterns = "/productos/*")
 public class ProductoControlador extends HttpServlet {
-    private ProductoService productoService = new ProductoService(new ProductoDAO());
-    private ClienteService clienteService = new ClienteService(new ClienteDAO());
+    private ProductoService productoService;
+    private ClienteService clienteService;
+    
+    @Override
+    public void init() throws ServletException {
+        productoService = new ProductoService(new ProductoDAO(getServletContext()));
+        clienteService = new ClienteService(new ClienteDAO(getServletContext()));    
+    }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

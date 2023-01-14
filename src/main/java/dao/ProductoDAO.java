@@ -2,10 +2,16 @@ package dao;
 
 import java.util.List;
 
+import jakarta.servlet.ServletContext;
 import model.ProductoDTO;
 
 public class ProductoDAO extends GenericDAO<ProductoDTO,Integer>{
 
+
+    public ProductoDAO(ServletContext servletContext) {
+        super(servletContext);
+        //TODO Auto-generated constructor stub
+    }
 
     @Override
     public ProductoDTO save(ProductoDTO entity) {
@@ -13,14 +19,23 @@ public class ProductoDAO extends GenericDAO<ProductoDTO,Integer>{
         return null;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public List<ProductoDTO> findAll() {
-        return getProductListFromQuery("SELECT * FROM producto");
+        List<ProductoDTO> productos;
+        manager = emf.createEntityManager();
+        productos = manager.createQuery("FROM ProductoDTO").getResultList();
+        manager.close();
+        return productos;
     }
 
     @Override
     public ProductoDTO findByID(Integer id) {
-        return getProductListFromQuery("SELECT * FROM producto WHERE id = "+id).get(0);
+        ProductoDTO p;
+        manager = emf.createEntityManager();
+        p = manager.find(ProductoDTO.class, id);
+        manager.close();
+        return p;
     }
 
     @Override
@@ -32,29 +47,23 @@ public class ProductoDAO extends GenericDAO<ProductoDTO,Integer>{
     public void saveClientProduct(Long client_id, Integer product_id){
         manager = emf.createEntityManager();
         manager.getTransaction().begin();
-        String query = "INSERT INTO cliente_producto VALUES(:client_id, :product_id)";
+        String query = "INSERT INTO cliente_producto VALUES(?,?)";
         manager.createNativeQuery(query)
-        .setParameter("client_id", client_id)
-        .setParameter( "product_id", client_id)
+        .setParameter(1, client_id)
+        .setParameter( 2, product_id)
         .executeUpdate();
         manager.getTransaction().commit();
         manager.close();
-        emf.close();
-
         
     }
 
-    public List<ProductoDTO> findProductsByClientId(Long id){
-        return getProductListFromQuery("SELECT p.id, p.nombre FROM producto p JOIN cliente_producto cp ON p.id = cp.producto_id JOIN cliente c ON cp.cliente_id = c.id WHERE c.id = "+id);
-    }
     @SuppressWarnings("unchecked")
-    private List<ProductoDTO> getProductListFromQuery(String query){
+    public List<ProductoDTO> findProductsByClientId(Long id){
         List<ProductoDTO> productos;
         manager = emf.createEntityManager();
-        manager.getTransaction().begin();
-        productos = manager.createNativeQuery(query).getResultList();
-        manager.getTransaction().commit();
+        productos = (List<ProductoDTO>)manager.createNativeQuery("SELECT * FROM producto p JOIN cliente_producto cp ON p.id = cp.producto_id JOIN cliente c ON cp.cliente_id = c.id WHERE c.id = ?",ProductoDTO.class).setParameter( 1, id).getResultList();
         manager.close();
         return productos;
     }
+    
 }

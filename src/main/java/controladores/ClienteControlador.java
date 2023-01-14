@@ -16,7 +16,13 @@ import services.ClienteService;
 @WebServlet(name="ClienteServlet", urlPatterns = "/clientes/*")
 public class ClienteControlador extends HttpServlet{
     
-    ClienteService service = new ClienteService(new ClienteDAO());
+    ClienteService service;
+
+    @Override
+    public void init() throws ServletException {
+        service = new ClienteService(new ClienteDAO(getServletContext()));
+    }
+    
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

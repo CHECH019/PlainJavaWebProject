@@ -2,16 +2,16 @@ package dao;
 
 import java.util.List;
 
-import controladores.DBConnection;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
+import jakarta.servlet.ServletContext;
 
 public abstract class GenericDAO<T,ID> {
     protected EntityManagerFactory emf;
     EntityManager manager;
 
-    public GenericDAO(){
-        this.emf = DBConnection.getEntityManagerFactory();
+    public GenericDAO(ServletContext servletContext){
+        this.emf = (EntityManagerFactory) servletContext.getAttribute("emf");
     }
     
     public abstract T save(T entity );
